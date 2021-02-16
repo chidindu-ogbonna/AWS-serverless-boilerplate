@@ -2,9 +2,10 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "scratch"
+stack_name = "era-backend-v1"
 s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-j945wt4vvbcq"
-s3_prefix = "scratch"
+s3_prefix = "era-backend-v1"
 region = "us-east-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
+parameter_overrides = "Stage=\"dev\""

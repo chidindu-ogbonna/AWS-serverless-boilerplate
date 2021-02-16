@@ -3,24 +3,23 @@
 
 AWSTemplateFormatVersion: 2010-09-09
 Transform: AWS::Serverless-2016-10-31
-Description: >-
-  scratch
+Description: Severless Backend
 
 Parameters:
   Stage:
     Type: String
-    Default: test
+    Default: prod
 
 Globals:
   Function:
     Runtime: nodejs12.x
-    Timeout: 120
-    MemorySize: 128
+    Timeout: 540
+    MemorySize: 256
     Environment:
       Variables:
         TABLE_NAME: my-table
-        STAGE: test
-        REGION: eu-west-1
+        STAGE: prod
+        REGION: us-east-1
 
 Resources:
   ApiDeployment:
@@ -28,20 +27,198 @@ Resources:
     Properties:
       StageName: !Ref Stage
 
-  hospitalGetAllCases:
+  # Cases
+  casesGet:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: src/handlers/hospital/get-all-cases.handler
-      Description: Dispatch responder to location
+      Handler: src/handlers/cases.getCase
+      Description: Get a single case
       Events:
-        hospitalGetAllCases:
+        casesGet:
           Type: Api
           Properties:
-            Path: /hospital/cases
+            Path: /v1/cases/{id}
             Method: get
             RestApiId: !Ref ApiDeployment
 
+  casesGetAll:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/cases.getAllCases
+      Description: Get all cases
+      Events:
+        casesGetAll:
+          Type: Api
+          Properties:
+            Path: /v1/cases
+            Method: get
+            RestApiId: !Ref ApiDeployment
+
+  casesUpdate:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/cases.updateCase
+      Description: Update a case
+      Events:
+        casesUpdate:
+          Type: Api
+          Properties:
+            Path: /v1/cases/{id}
+            Method: put
+            RestApiId: !Ref ApiDeployment
+
+  casesCreate:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/cases.createCase
+      Description: Create a case
+      Events:
+        casesCreate:
+          Type: Api
+          Properties:
+            Path: /v1/cases
+            Method: post
+            RestApiId: !Ref ApiDeployment
+
+  casesDelete:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/cases.deleteCase
+      Description: Delete a case
+      Events:
+        casesDelete:
+          Type: Api
+          Properties:
+            Path: /v1/cases/{id}
+            Method: delete
+            RestApiId: !Ref ApiDeployment
+
+  # Hospitals
+  hospitalsGetAll:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/hospitals/get-all-hospitals.handler
+      Description: Get all hospitals
+      Events:
+        hospitalsGetAll:
+          Type: Api
+          Properties:
+            Path: /v1/hospitals
+            Method: get
+            RestApiId: !Ref ApiDeployment
+
+  hospitalsCreate:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/hospitals/create-new-hospital.handler
+      Description: Create a new hospital
+      Events:
+        hospitalsCreate:
+          Type: Api
+          Properties:
+            Path: /v1/hospitals
+            Method: post
+            RestApiId: !Ref ApiDeployment
+
+  hospitalsDelete:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/hospitals/delete-hospital.handler
+      Description: Delete a new hospital
+      Events:
+        hospitalsDelete:
+          Type: Api
+          Properties:
+            Path: /v1/hospitals/{id}
+            Method: delete
+            RestApiId: !Ref ApiDeployment
+
+  # hospitalGetAllCases:
+  #   Type: AWS::Serverless::Function
+  #   Properties:
+  #     Handler: src/handlers/hospital/get-all-cases.handler
+  #     Description: Dispatch responder to location
+  #     Events:
+  #       hospitalGetAllCases:
+  #         Type: Api
+  #         Properties:
+  #           Path: /hospital/cases
+  #           Method: get
+  #           RestApiId: !Ref ApiDeployment
+  # hospitalTest:
+  #   Type: AWS::Serverless::Function
+  #   Properties:
+  #     Handler: src/handlers/hospital/test.handler
+  #     Description: A test route
+  #     Events:
+  #       hospitalTest:
+  #         Type: Api
+  #         Properties:
+  #           Path: /hospital/test
+  #           Method: get
+  #           RestApiId: !Ref ApiDeployment
+  # GetCases:
+  #   Type: AWS::Serverless::Function
+  #   Properties:
+  #     Handler: src/handlers/cases.getAllCases
+  #     Description: Cases route
+  #     Events:
+  #       hospitalTest:
+  #         Type: Api
+  #         Properties:
+  #           Path: /cases
+  #           Method: get
+  #           RestApiId: !Ref ApiDeployment
+  # GetCase:
+  #   Type: AWS::Serverless::Function
+  #   Properties:
+  #     Handler: src/handlers/cases.getCase
+  #     Description: Get a single case
+  #     Events:
+  #       hospitalTest:
+  #         Type: Api
+  #         Properties:
+  #           Path: /cases/{id}
+  #           Method: get
+  #           RestApiId: !Ref ApiDeployment
+  # PostCases:
+  #   Type: AWS::Serverless::Function
+  #   Properties:
+  #     Handler: src/handlers/cases.addNewCase
+  #     Description: Add new Cases route
+  #     Events:
+  #       hospitalTest:
+  #         Type: Api
+  #         Properties:
+  #           Path: /cases
+  #           Method: post
+  #           RestApiId: !Ref ApiDeployment
+  # DeleteCase:
+  #   Type: AWS::Serverless::Function
+  #   Properties:
+  #     Handler: src/handlers/cases.deleteCase
+  #     Description: Add new Cases route
+  #     Events:
+  #       hospitalTest:
+  #         Type: Api
+  #         Properties:
+  #           Path: /cases
+  #           Method: post
+  #           RestApiId: !Ref ApiDeployment
+
+# Outputs:
+#   hospitalGetAllCases:
+#     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+#     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/started/"
+#     # Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/${Stage}/started/"
+
 Outputs:
-  hospitalGetAllCases:
-    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/${Stage}/started/"
+  ApiDeployment:
+    Description: "API Gateway endpoint URL for stage"
+    Value: !Sub "https://${ApiDeployment}.execute-api.${AWS::Region}.amazonaws.com/${Stage}"
+#   HelloWorldFunction:
+#     Description: "Hello World Lambda Function ARN"
+#     Value: !GetAtt HelloWorldFunction.Arn
+#   HelloWorldFunctionIamRole:
+#     Description: "Implicit IAM Role created for Hello World function"
+#     Value: !GetAtt HelloWorldFunctionRole.Arn

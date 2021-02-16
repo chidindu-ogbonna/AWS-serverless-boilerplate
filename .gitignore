@@ -130,3 +130,7 @@ dist
 # Local History for Visual Studio Code
 .history/
 .aws-sam/
+
+example-2.js
+example.js
+former.toml

@@ -3,9 +3,12 @@
     "description": "replaced-by-user-input",
     "version": "0.0.1",
     "private": true,
-    "dependencies": {},
+    "dependencies": {
+        "aws-sdk": "^2.843.0",
+        "crypto": "^1.0.1",
+        "http-status-codes": "^2.1.4"
+    },
     "devDependencies": {
-        "aws-sdk": "^2.815.0",
         "eslint": "^7.20.0",
         "eslint-config-prettier": "^7.2.0",
         "eslint-plugin-prettier": "^3.3.1",
