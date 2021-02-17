@@ -18,6 +18,8 @@
     },
     "scripts": {
         "test": "jest --roots __tests__/unit",
-        "integ-test": "jest --roots __tests__/integration"
+        "integ-test": "jest --roots __tests__/integration",
+        "deploy:staging": "./deploy.staging.sh",
+        "deploy:prod": "./deploy.prod.sh"
     }
 }
