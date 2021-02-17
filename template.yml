@@ -5,6 +5,16 @@ AWSTemplateFormatVersion: 2010-09-09
 Transform: AWS::Serverless-2016-10-31
 Description: Severless Backend
 
+# XXX: Example Policies
+# Policies:
+#   # Give Create/Read/Update/Delete Permissions to the SampleTable
+#   - DynamoDBCrudPolicy:
+#       TableName: !Ref SampleTable
+# Environment:
+#   Variables:
+#     # Make table name accessible as environment variable from function code during execution
+#     SAMPLE_TABLE: !Ref SampleTable
+
 Parameters:
   Stage:
     Type: String
@@ -17,7 +27,7 @@ Globals:
     MemorySize: 256
     Environment:
       Variables:
-        TABLE_NAME: my-table
+        CASES_TABLE_DB: cases
         STAGE: prod
         REGION: us-east-1
 
@@ -33,6 +43,11 @@ Resources:
     Properties:
       Handler: src/handlers/cases.getCase
       Description: Get a single case
+      Policies:
+        # Give Lambda basic execution Permission
+        - AWSLambdaBasicExecutionRole
+        # Give DynamoDB Full Access to your Lambda Function
+        - AmazonDynamoDBFullAccess
       Events:
         casesGet:
           Type: Api
