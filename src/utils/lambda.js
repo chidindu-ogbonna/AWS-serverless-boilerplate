@@ -4,7 +4,7 @@
  * Detect the stage this function is executed in
  * @param {import("aws-lambda").APIGatewayProxyEvent} event
  */
-exports.detectStage = (event) => {
+exports.getStage = (event) => {
   return event.requestContext.stage;
 };
 
