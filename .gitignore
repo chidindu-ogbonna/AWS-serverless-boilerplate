@@ -136,3 +136,4 @@ former.toml
 
 # Results of viewing template.yml graph
 *.dot
+samconfig.toml
